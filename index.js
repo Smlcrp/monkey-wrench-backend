@@ -48,7 +48,7 @@ app.get('/inventory/:id', async(req, res) => {
 
 // Update a single Inventroy item
 
-app.put('inventory/:id', async(req, res) => {
+app.put('/inventory/:id', async(req, res) => {
     try {
         const { id } = req.params;
         const { name, stock, price } = req.body;
@@ -61,19 +61,79 @@ app.put('inventory/:id', async(req, res) => {
 
 // Delete a single Inventory item
 
+app.delete('/inventory/:id', async(req, res) => {
+    try {
+        const { id } = req.params;
+        const deleteInventory = await pool.query("DELETE FROM inventory WHERE inventory_id= $1", [id])
+        res.json("inventory item was deleted")
+    } catch (error) {
+        console.error(error)
+    }
+})
+
 
 
 // Jobs Routes
 
 // Create a Job
 
+app.post('/jobs', async(req, res) => {
+    try {
+        const { customer, phone, job_description } = req.body
+        const newJob = await pool.query('INSERT INTO jobs (customer, phone, job_description) VALUES ($1, $2, $3) RETURNING *', [customer, phone, job_description]);
+        res.json(newJob.rows[0])
+    } catch (error) {
+        console.error(error);
+    }
+})
+
 // Get all Jobs
+
+app.get('/jobs', async(req, res) => {
+    try {
+        const allJobs = await pool.query('SELECT * FROM jobs');
+        res.json(allJobs.rows);
+    } catch (error) {
+        console.error(error);
+    }
+})
 
 // Get a Job
 
+app.get('/jobs/:id', async(req, res) => {
+    try {
+        const { id } = req.params;
+        const jobs = await pool.query('SELECT * FROM jobs WHERE job_id = $1', [id]);
+        res.json(jobs.rows[0])
+    } catch (error) {
+        console.error(error);
+    }
+})
+
 // Update a Job
 
+app.put('/jobs/:id', async(req, res) => {
+    try {
+        const { id } = req.params;
+        const { customer, phone, job_description } = req.body;
+        const updateJob = await pool.query('UPDATE jobs SET customer=$1, phone=$2, job_description=$3 WHERE job_id=$4', [customer, phone, job_description, id]);
+        res.json('jobs were updated')
+    } catch (error) {
+        console.error(error);
+    }
+})
+
 // Delete a Job
+
+app.delete('/jobs/:id', async(req, res) => {
+    try {
+        const { id } = req.params;
+        const deleteJob = await pool.query('DELETE FROM jobs WHERE job_id = $1', [id]);
+        res.json('Job was deleted')
+    } catch (error) {
+        console.error(error);
+    }
+})
 
 app.listen(2000, () => {
     console.log('server has started on port 2000');
