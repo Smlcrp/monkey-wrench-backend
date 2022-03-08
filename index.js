@@ -36,7 +36,28 @@ app.get('/inventory', async(req, res) => {
 
 // get a single Inventory item
 
+app.get('/inventory/:id', async(req, res) => {
+    try {
+        const { id } = req.params;
+        const inventory = await pool.query('SELECT * FROM inventory WHERE inventory_id = $1', [id])
+        res.json(inventory.rows[0])
+    } catch (error) {
+       console.error(error) 
+    }
+})
+
 // Update a single Inventroy item
+
+app.put('inventory/:id', async(req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, stock, price } = req.body;
+        const updateInventory = await pool.query('UPDATE inventory SET name= $1, stock= $2, price= $3 WHERE inventory_id= $4', [name, stock, price, id])
+        res.json('inventory was updated')
+    } catch (error) {
+        console.error(error)
+    }
+})
 
 // Delete a single Inventory item
 
