@@ -1,3 +1,4 @@
-const dbConfig = require('../config/db.config');
+const Pool = require('../config/db.config');
 
 const Sequelize = require('sequelize');
+
