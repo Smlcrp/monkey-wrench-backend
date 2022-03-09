@@ -9,5 +9,6 @@ module.exports = (sequelize, Sequelize) => {
         price: {
             type: Sequelize.DECIMAL,
         }
-    })
-}
+    });
+    return Inventory;
+};

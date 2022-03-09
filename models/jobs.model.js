@@ -9,5 +9,6 @@ module.exports = (sequelize, Sequelize) => {
         job_description: {
             type: Sequelize.TEXT,
         }
-    })
-}
+    });
+    return Jobs;
+};
